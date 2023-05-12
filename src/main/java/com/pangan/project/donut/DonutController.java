@@ -5,17 +5,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
-/*
-* DONUT HTTP:
-*
-* GET - /donut - getAllDonuts
-* GET - /donut/{id} - getDonutById
-* POST - /donut - addNewDonut
-* PUT - /donut/{id} - updateDonutById
-* DELETE - /donut/{id} - deleteDonutById
-*
-* */
 @RestController
 public class DonutController {
     @Autowired

@@ -1,47 +1,54 @@
 package com.pangan.project.donut;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DonutService {
-    private List<Donut> _donutList = new ArrayList<Donut>();
+
+    @Autowired
+    private DonutRepository _donutRepository;
 
     public List<Donut> getAllDonuts() {
-        return _donutList;
+        return _donutRepository.findAll();
     }
 
     public Donut getDonutById(String donutId) {
-        for (Donut donut: _donutList) {
-            if (donut.getId().equals(donutId))
-                return donut;
+        Optional<Donut> result = _donutRepository.findById(donutId);
+        if (result.isEmpty()) {
+            return null;
         }
 
-        return new Donut("defaultDonut", "Default Round Donut");
+        return result.get();
     }
 
     public Donut addNewDonut(Donut newDonut) {
-        _donutList.add(newDonut);
-        return _donutList.get(_donutList.size() - 1);
+        return _donutRepository.save(newDonut);
     }
 
     public Donut updateDonutById(Donut updatedDonut, String donutId) {
-        for (int i = 0; i < _donutList.size(); i++) {
-            Donut tempDonut = _donutList.get(i);
-            if (tempDonut.getId().equals(donutId)) {
-                _donutList.get(i).setId(updatedDonut.getId());
-                _donutList.get(i).setName(updatedDonut.getName());
-                return _donutList.get(i);
-            }
+        Optional<Donut> searchedDonut = _donutRepository.findById(donutId);
+        if (searchedDonut.isEmpty()) {
+            return null;
         }
 
-        return null;
+        Donut donut = searchedDonut.get();
+        donut.setName(updatedDonut.getName());
+        Donut savedDonut = _donutRepository.save(donut);
+        return savedDonut;
     }
 
     public String deleteDonutById(String donutId) {
-        _donutList.removeIf(donut -> donut.getId().equals(donutId));
+        Optional<Donut> searchedDonut = _donutRepository.findById(donutId);
+        if (searchedDonut.isEmpty()) {
+            return null;
+        }
+
+        Donut donut = searchedDonut.get();
+        _donutRepository.delete(donut);
         return "DONUT DELETED!";
     }
 }

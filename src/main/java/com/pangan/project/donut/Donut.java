@@ -1,6 +1,10 @@
 package com.pangan.project.donut;
 
+import org.springframework.data.annotation.Id;
+
 public class Donut {
+
+    @Id
     private String id;
     private String name;
 
